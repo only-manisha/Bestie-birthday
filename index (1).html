@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEON SYSTEM | LADLI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Orbitron', system-ui, sans-serif;
+}
+
+body{
+  background:#000;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* CANVAS BG */
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* SLIDES */
+.slide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s cubic-bezier(.16,1,.3,1),
+    filter 1.2s ease;
+}
+
+.hide{
+  opacity:0;
+  transform:scale(1.15);
+  filter:blur(30px);
+  pointer-events:none;
+}
+
+h1{
+  font-size:2.6rem;
+  color:#00ffff;
+  text-shadow:
+    0 0 8px #00ffff,
+    0 0 25px #ff00ff;
+}
+
+p{
+  margin-top:14px;
+  font-size:1.1rem;
+  color:#bbb;
+}
+
+/* BUTTON */
+.btn{
+  margin-top:45px;
+  padding:14px 44px;
+  background:transparent;
+  border:2px solid #00ffff;
+  border-radius:40px;
+  color:#00ffff;
+  font-size:1rem;
+  cursor:pointer;
+  box-shadow:
+    0 0 15px #00ffff,
+    inset 0 0 20px rgba(255,0,255,.6);
+  transition:.35s ease;
+}
+
+.btn:hover{
+  background:#00ffff;
+  color:#000;
+  box-shadow:0 0 45px #00ffff;
+}
+
+/* GLITCH TEXT */
+.glitch{
+  animation:glitch 1.8s infinite;
+}
+
+@keyframes glitch{
+  0%{text-shadow:2px 0 red,-2px 0 cyan}
+  25%{text-shadow:-2px 0 red,2px 0 cyan}
+  50%{text-shadow:2px 2px magenta}
+  75%{text-shadow:-2px -2px cyan}
+  100%{text-shadow:0 0 30px #00ffff}
+}
+
+/* FINAL */
+.final h1{
+  font-size:3.1rem;
+  animation:pulse 1.6s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.07)}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- SLIDES -->
+<div class="slide" id="s1">
+  <h1 class="glitch">SYSTEM BOOTING ⚡</h1>
+  <p>Neon grid initializing…</p>
+  <button class="btn" onclick="go(1)">START</button>
+</div>
+
+<div class="slide hide" id="s2">
+  <h1>VISUAL STREAM ONLINE</h1>
+  <p>Quantum neon detected</p>
+  <button class="btn" onclick="go(2)">NEXT</button>
+</div>
+
+<div class="slide hide" id="s3">
+  <h1 class="glitch">TARGET LOCKED 🎯</h1>
+  <p>Identity: LADLI</p>
+  <button class="btn" onclick="go(3)">CONFIRM</button>
+</div>
+
+<div class="slide hide" id="s4">
+  <h1>ENERGY FLOWING 🔥</h1>
+  <p>Neon cubes stabilizing</p>
+  <button class="btn" onclick="go(4)">FLOW</button>
+</div>
+
+<div class="slide hide" id="s5">
+  <h1>CYBER VIBES ONLY</h1>
+  <p>Screen looking fire 😈</p>
+  <button class="btn" onclick="go(5)">CONTINUE</button>
+</div>
+
+<div class="slide hide" id="s6">
+  <h1 class="glitch">WARNING ⚠</h1>
+  <p>Birthday blast incoming</p>
+  <button class="btn" onclick="go(6)">READY</button>
+</div>
+
+<div class="slide hide" id="s7">
+  <h1>COUNTDOWN</h1>
+  <p>3 • 2 • 1</p>
+  <button class="btn" onclick="go(7)">🔥</button>
+</div>
+
+<div class="slide hide final" id="s8">
+  <h1>🎉 HAPPY BIRTHDAY LADLI 🎉</h1>
+  <p>
+    Neon for the rarest soul.<br>
+    Stay bold. Stay unstoppable ⚡
+  </p>
+</div>
+
+<script>
+/* SLIDE CONTROL */
+function go(n){
+  document.getElementById("s"+n).classList.add("hide");
+  document.getElementById("s"+(n+1)).classList.remove("hide");
+}
+
+/* NEON CUBE FLOW BACKGROUND */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+let w,h;
+function resize(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+const cubes=[];
+for(let i=0;i<140;i++){
+  cubes.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    s:8+Math.random()*18,
+    vx:-0.3+Math.random()*0.6,
+    vy:0.5+Math.random()*1.2,
+    c:`hsl(${Math.random()*360},100%,60%)`
+  });
+}
+
+function draw(){
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,w,h);
+
+  cubes.forEach(c=>{
+    ctx.strokeStyle=c.c;
+    ctx.shadowColor=c.c;
+    ctx.shadowBlur=15;
+    ctx.strokeRect(c.x,c.y,c.s,c.s);
+
+    c.x+=c.vx;
+    c.y+=c.vy;
+    if(c.y>h) c.y=-20;
+    if(c.x>w) c.x=-20;
+    if(c.x<0) c.x=w;
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
